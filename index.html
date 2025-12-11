@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wong Jui Hong | Software Engineer</title>
+  <!-- Placeholder for favicon -->
+  <link rel="icon" type="image/png" href="portfolio.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- 1. LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor"></div>
+
+  <nav class="navbar">
+    <div class="nav-brand">WJH.</div>
+
+    <!-- 2. HAMBURGER MENU ICON -->
+    <div class="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+
+    <div class="navbar-links">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#experience" class="nav-link">Journey</a> <!-- New Section -->
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#contact" class="nav-link">Contact</a>
+
+      <!-- Theme Switch moved inside mobile menu for easier access -->
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" />
+          <div class="slider round"></div>
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Hello, I'm Wong Jui Hong.</h1>
+      <p>I am a <span class="typing-text"></span></p>
+    </div>
+  </header>
+
+  <main>
+    <section id="about" class="container hidden">
+      <h2>About Me</h2>
+      <p>
+        I am a Software Engineering graduate (First Class Honours) from Multimedia University.
+        I have practical internship experience in the complete software development lifecycle,
+        from feature development to bug resolution. I am a resourceful problem-solver,
+        passionate about creating effective and reliable software.
+      </p>
+      <!-- 3. RESUME DOWNLOAD BUTTON -->
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="resume.pdf" download="Resume_WongJuiHong" class="download-btn">
+          Download Resume
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. NEW EXPERIENCE / TIMELINE SECTION -->
+    <section id="experience" class="container hidden">
+      <h2>My Journey</h2>
+      <div class="timeline">
+        <!-- Content injected via JS -->
+      </div>
+    </section>
+
+    <section id="skills" class="container hidden">
+      <h2>Technical Skills</h2>
+      <div class="skills-grid">
+        <!-- Skills content will be added by JavaScript -->
+      </div>
+    </section>
+
+    <section id="projects" class="container hidden">
+      <h2>My Projects</h2>
+      <div class="project-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="mobile">Mobile</button>
+        <button class="filter-btn" data-filter="backend">Backend</button>
+        <button class="filter-btn" data-filter="fullstack">Full-Stack</button>
+      </div>
+      <div id="projects-container"></div>
+    </section>
+
+    <section id="contact" class="container hidden">
+      <h2>Get In Touch</h2>
+      <p>
+        I'm currently seeking new opportunities. Let's build something amazing together!
+      </p>
+      <div class="contact-links">
+        <a href="mailto:juihongsss@gmail.com" class="contact-button">Email Me</a>
+        <a href="https://www.linkedin.com/in/wongjuihong" target="_blank" class="contact-button">LinkedIn</a>
+        <a href="https://github.com/Thisishong03" target="_blank" class="contact-button">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <a href="#" class="scroll-to-top">▲</a>
+
+  <footer>
+    <p>&copy; 2025 Wong Jui Hong. Built with Passion.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
