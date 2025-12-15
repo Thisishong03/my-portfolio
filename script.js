@@ -1,224 +1,312 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- LOADER ---
-  const loader = document.getElementById("loading-screen");
-  window.addEventListener("load", () => {
-    loader.style.opacity = "0";
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 500);
-  });
-
-  // --- DARK MODE TOGGLE ---
-  const themeSwitch = document.getElementById("checkbox");
-  themeSwitch.addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
-  });
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
-    themeSwitch.checked = true;
-  }
-
-  // --- MOBILE NAVIGATION (HAMBURGER) ---
-  const hamburger = document.querySelector(".hamburger");
-  const navMenu = document.querySelector(".navbar-links");
-  const navLinks = document.querySelectorAll(".nav-link");
-
-  hamburger.addEventListener("click", () => {
-    hamburger.classList.toggle("active");
-    navMenu.classList.toggle("active");
-  });
-
-  // Close menu when clicking a link
-  navLinks.forEach(link => {
-    link.addEventListener("click", () => {
-      hamburger.classList.remove("active");
-      navMenu.classList.remove("active");
-    });
-  });
-
-  // --- ACTIVE SCROLL HIGHLIGHT ---
-  const sections = document.querySelectorAll("section");
-  const navOptions = { threshold: 0.3 };
-
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.classList.remove("active");
-          if (link.getAttribute("href").substring(1) === entry.target.id) {
-            link.classList.add("active");
-          }
-        });
-      }
-    });
-  }, navOptions);
-
-  sections.forEach(section => navObserver.observe(section));
-
-  // --- TYPING EFFECT ---
-  const typingElement = document.querySelector(".typing-text");
-  const phrases = ["Software Engineer.", "Full-Stack Developer.", "Mobile App Developer."];
-  let phraseIndex = 0;
-  let charIndex = 0;
-
-  function type() {
-    if (charIndex < phrases[phraseIndex].length) {
-      typingElement.textContent += phrases[phraseIndex].charAt(charIndex);
-      charIndex++;
-      setTimeout(type, 70);
-    } else {
-      setTimeout(erase, 2000);
-    }
-  }
-  function erase() {
-    if (charIndex > 0) {
-      typingElement.textContent = phrases[phraseIndex].substring(0, charIndex - 1);
-      charIndex--;
-      setTimeout(erase, 35);
-    } else {
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(type, 500);
-    }
-  }
-  type();
-
-  // --- EXPERIENCE DATA ---
+  /* -----------------------------------------------------------
+     1. DATA STORE (The "Content Management" Part)
+  ----------------------------------------------------------- */
   const experienceData = [
     {
       date: "July 2025 - Oct 2025",
-      title: "Software Engineer Intern",
-      company: "IPS Software Sdn. Bhd. (Muar, Johor)",
-      details: [
-        "Built a complete Company/Device Management module for internal HR system (PHP, MySQL, RESTful API).",
-        "Engineered a logistics event logging system tracking 20+ user actions, improving security.",
-        "Integrated Autocount SDK (Debtors, Creditors, Tax Entities) with full CRUD functionality.",
-        "Performed critical QA testing for financial systems before major sales events."
+      role: "Software Engineer Intern",
+      company: "IPS Software Sdn. Bhd.",
+      tasks: [
+        "Built Company/Device Management module (PHP, MySQL, RESTful API).",
+        "Engineered logistics event logging system tracking 20+ user actions.",
+        "Integrated Autocount SDK with full CRUD functionality.",
+        "Performed critical QA testing for financial systems."
       ]
     },
     {
       date: "Oct 2021 - Dec 2025",
-      title: "Bachelor of Computer Science (Hons) Software Engineering",
-      company: "Multimedia University (Cyberjaya)",
-      details: [
-        "Graduated with First Class Honours.",
-        "Recipient of University Book Award 2025.",
-        "Participant, 2025 IEEE International Conference on Computing.",
-        "Relevant Coursework: OOP, Database Systems, Web Development."
+      role: "Bachelor of Computer Science (Hons)",
+      company: "Multimedia University",
+      tasks: [
+        "Software Engineering Major (First Class Honours).",
+        "University Book Award Recipient 2025.",
+        "Relevant Coursework: OOP, Database Systems, Web Dev."
       ]
     }
   ];
 
-  const timelineContainer = document.querySelector(".timeline");
-  experienceData.forEach(item => {
-    const div = document.createElement("div");
-    div.classList.add("timeline-item");
-    div.innerHTML = `
-      <span class="timeline-date">${item.date}</span>
-      <div class="timeline-content">
-        <h3>${item.title}</h3>
-        <h4>${item.company}</h4>
-        <ul>
-          ${item.details.map(detail => `<li>${detail}</li>`).join('')}
-        </ul>
-      </div>
-    `;
-    timelineContainer.appendChild(div);
-  });
-
-  // --- SKILLS DATA ---
-  const skills = {
-    Languages: ["PHP", "Dart", "JavaScript", "SQL (MySQL)", "HTML5", "CSS3", "Java", "C++"],
-    Technologies: ["Flutter", "Firebase", "RESTful APIs"],
-    Tools: ["Git", "GitHub", "VS Code", "Postman", "Sublime"]
+  const skillsData = {
+    "Languages": ["PHP", "Dart", "JavaScript", "SQL", "HTML5", "CSS3", "Java", "C++"],
+    "Frameworks": ["Flutter", "Firebase", "RESTful APIs", "Bootstrap"],
+    "Tools": ["Git", "GitHub", "VS Code", "Postman", "Figma"]
   };
 
-  const skillsGrid = document.querySelector(".skills-grid");
-  for (const category in skills) {
-    const categoryDiv = document.createElement("div");
-    categoryDiv.classList.add("skill-category");
-    categoryDiv.innerHTML = `<h3>${category}</h3><ul>${skills[category].map(s => `<li>${s}</li>`).join('')}</ul>`;
-    skillsGrid.appendChild(categoryDiv);
-  }
-
-  // --- PROJECTS DATA ---
-  const projects = [
+  const projectsData = [
     {
-      title: "MYHistory: Interactive Mobile App",
-      description: "Final Year Project. A gamified app for learning Malaysian history with Stamp collection & quizzes.",
-      technologies: ["Flutter", "Dart", "Firebase"],
-      category: "mobile"
+      id: 1,
+      title: "MYHistory: Interactive Learning App",
+      desc: "Gamified mobile app for learning Malaysian history with quizzes and progress tracking.",
+      tech: ["Flutter", "Dart", "Firebase"],
+      category: "mobile",
+      github: "https://github.com/Thisishong03",
+      demo: "#"
     },
     {
-      title: "HR System Module (Internship)",
-      description: "Company & Device Management module with RESTful API integration.",
-      technologies: ["PHP", "MySQL", "API"],
-      category: "fullstack"
+      id: 2,
+      title: "HR Management System",
+      desc: "Full-stack module for managing company assets and employee data.",
+      tech: ["PHP", "MySQL", "REST API"],
+      category: "fullstack",
+      github: "https://github.com/Thisishong03",
+      demo: "#"
     },
     {
+      id: 3,
       title: "Logistics Event Logger",
-      description: "Security system tracking 20+ distinct user actions for traceability.",
-      technologies: ["PHP", "MySQL"],
-      category: "backend"
+      desc: "Backend system for tracking user actions to improve security and traceability.",
+      tech: ["PHP", "MySQL", "Architecture"],
+      category: "backend",
+      github: "https://github.com/Thisishong03",
+      demo: "#"
     }
   ];
 
-  const projectsContainer = document.getElementById("projects-container");
-  const filterBtns = document.querySelectorAll(".filter-btn");
+  /* -----------------------------------------------------------
+     2. INITIALIZATION & LOADER
+  ----------------------------------------------------------- */
+  const loader = document.getElementById("loader");
 
-  function displayProjects(filter = "all") {
-    projectsContainer.innerHTML = "";
-    const filtered = projects.filter(p => filter === "all" || p.category === filter);
-    filtered.forEach(p => {
-      projectsContainer.innerHTML += `
-        <div class="project-card">
-          <h3>${p.title}</h3>
-          <p>${p.description}</p>
-          <ul class="tech-stack">${p.technologies.map(t => `<li>${t}</li>`).join('')}</ul>
-        </div>
-      `;
-    });
+  // Simulate content loading
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      loader.style.opacity = "0";
+      setTimeout(() => loader.style.display = "none", 500);
+    }, 500);
+  });
+
+  /* -----------------------------------------------------------
+     3. DYNAMIC CONTENT INJECTION
+  ----------------------------------------------------------- */
+  // Render Timeline
+  const timelineContainer = document.getElementById("timeline-container");
+  experienceData.forEach(item => {
+    timelineContainer.innerHTML += `
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="text-muted text-sm">${item.date}</span>
+                    <h3>${item.role}</h3>
+                    <h4>${item.company}</h4>
+                    <ul>${item.tasks.map(t => `<li>${t}</li>`).join('')}</ul>
+                </div>
+            </div>
+        `;
+  });
+
+  // Render Skills
+  const skillsContainer = document.getElementById("skills-container");
+  for (const [category, skills] of Object.entries(skillsData)) {
+    skillsContainer.innerHTML += `
+            <div class="skill-card fade-in">
+                <h3>${category}</h3>
+                <div class="skill-tags">
+                    ${skills.map(s => `<span class="tag">${s}</span>`).join('')}
+                </div>
+            </div>
+        `;
   }
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      filterBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      displayProjects(btn.dataset.filter);
+  // Render Projects
+  const projectsGrid = document.getElementById("projects-grid");
+  function renderProjects(filter = 'all') {
+    projectsGrid.innerHTML = "";
+    const filtered = projectsData.filter(p => filter === 'all' || p.category === filter);
+
+    filtered.forEach(p => {
+      const card = document.createElement('div');
+      card.className = "project-card fade-in";
+      card.innerHTML = `
+                <div class="project-body">
+                    <h3>${p.title}</h3>
+                    <p class="text-muted">${p.desc}</p>
+                    <div class="project-tech">
+                        ${p.tech.map(t => `<span>#${t}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+      // Add click event for modal
+      card.addEventListener('click', () => openModal(p));
+      projectsGrid.appendChild(card);
+    });
+  }
+  renderProjects(); // Initial Render
+
+  /* -----------------------------------------------------------
+     4. INTERACTIVITY & EVENTS
+  ----------------------------------------------------------- */
+  // Dark Mode Toggle
+  const themeBtn = document.getElementById("theme-toggle");
+  const sunIcon = document.querySelector(".sun-icon");
+  const moonIcon = document.querySelector(".moon-icon");
+
+  function applyTheme(theme) {
+    document.body.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+    if (theme === 'dark') {
+      sunIcon.classList.add("hidden");
+      moonIcon.classList.remove("hidden");
+    } else {
+      sunIcon.classList.remove("hidden");
+      moonIcon.classList.add("hidden");
+    }
+  }
+
+  const savedTheme = localStorage.getItem("theme") || "light";
+  applyTheme(savedTheme);
+
+  themeBtn.addEventListener("click", () => {
+    const current = document.body.getAttribute("data-theme");
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+
+  // Mobile Menu
+  const hamburger = document.querySelector(".hamburger");
+  const navMenu = document.querySelector(".nav-menu");
+  hamburger.addEventListener("click", () => {
+    navMenu.classList.toggle("active");
+    hamburger.setAttribute("aria-expanded", navMenu.classList.contains("active"));
+  });
+
+  // Close menu on link click
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => navMenu.classList.remove("active"));
+  });
+
+  // Project Filtering
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      renderProjects(e.target.dataset.filter);
     });
   });
-  displayProjects();
 
-  // --- SCROLL ANIMATIONS ---
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add("visible");
-    });
-  }, { threshold: 0.1 });
+  /* -----------------------------------------------------------
+     5. ADVANCED FEATURES (Modal, Typer, Form)
+  ----------------------------------------------------------- */
+  // Modal Logic
+  const modal = document.getElementById("project-modal");
+  const modalBody = document.getElementById("modal-body");
+  const closeBtn = document.querySelector(".close-modal");
 
-  document.querySelectorAll(".hidden").forEach((el) => observer.observe(el));
+  function openModal(project) {
+    modalBody.innerHTML = `
+            <h2>${project.title}</h2>
+            <p style="margin: 1rem 0;">${project.desc}</p>
+            <div style="margin-bottom: 1.5rem;">
+                <strong>Technologies:</strong> ${project.tech.join(", ")}
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="${project.github}" target="_blank" class="btn btn-primary">View Code</a>
+                <a href="${project.demo}" class="btn btn-outline">Live Demo</a>
+            </div>
+        `;
+    modal.showModal();
+  }
 
-  // --- SCROLL TO TOP BUTTON ---
-  const scrollToTopBtn = document.querySelector(".scroll-to-top");
-  
-  window.addEventListener("scroll", () => {
-    // Show button when page is scrolled down 300px
-    if (window.scrollY > 300) {
-      scrollToTopBtn.classList.add("visible");
+  closeBtn.addEventListener("click", () => modal.close());
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.close(); // Close on backdrop click
+  });
+
+  // Typewriter Effect
+  const typeText = document.querySelector(".typing-text");
+  const roles = ["Software Engineer", "Mobile Developer", "Full-Stack Dev"];
+  let roleIndex = 0, charIndex = 0, isDeleting = false;
+
+  function type() {
+    const currentRole = roles[roleIndex];
+    if (isDeleting) {
+      typeText.textContent = currentRole.substring(0, charIndex - 1);
+      charIndex--;
     } else {
-      scrollToTopBtn.classList.remove("visible");
+      typeText.textContent = currentRole.substring(0, charIndex + 1);
+      charIndex++;
+    }
+
+    if (!isDeleting && charIndex === currentRole.length) {
+      isDeleting = true;
+      setTimeout(type, 2000); // Pause at end
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+      setTimeout(type, 500);
+    } else {
+      setTimeout(type, isDeleting ? 50 : 100);
+    }
+  }
+  type();
+
+  // Form Validation
+  const form = document.getElementById("contact-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    // Simple regex for email
+    const email = form.email.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    document.getElementById("email-error").textContent = "";
+    document.getElementById("name-error").textContent = "";
+
+    if (!form.name.value.trim()) {
+      document.getElementById("name-error").textContent = "Name is required";
+      valid = false;
+    }
+    if (!emailRegex.test(email)) {
+      document.getElementById("email-error").textContent = "Invalid email address";
+      valid = false;
+    }
+
+    if (valid) {
+      const btn = form.querySelector("button");
+      const originalText = btn.textContent;
+      btn.textContent = "Sending...";
+      btn.disabled = true;
+
+      // Simulate API call
+      setTimeout(() => {
+        document.getElementById("form-status").textContent = "Message sent successfully!";
+        document.getElementById("form-status").style.color = "green";
+        form.reset();
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 1500);
     }
   });
 
-  scrollToTopBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  /* -----------------------------------------------------------
+     6. OBSERVERS (Scroll Animations & Active Nav)
+  ----------------------------------------------------------- */
+  const observerOptions = { threshold: 0.1 };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, observerOptions);
 
-  // --- CURSOR ---
-  const cursor = document.querySelector(".cursor");
+  document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+  // Custom Cursor logic
+  const cursorDot = document.querySelector(".cursor-dot");
+  const cursorOutline = document.querySelector(".cursor-outline");
+
   window.addEventListener("mousemove", (e) => {
-    cursor.style.top = (e.pageY - scrollY) + "px";
-    cursor.style.left = e.pageX + "px";
+    const posX = e.clientX;
+    const posY = e.clientY;
+
+    // Dot follows instantly
+    cursorDot.style.left = `${posX}px`;
+    cursorDot.style.top = `${posY}px`;
+
+    // Outline follows with slight delay (animation in CSS)
+    cursorOutline.animate({
+      left: `${posX}px`,
+      top: `${posY}px`
+    }, { duration: 500, fill: "forwards" });
   });
 });
