@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loader: document.getElementById("loader"),
     navbar: document.getElementById("navbar"),
     navMenu: document.getElementById("nav-menu"),
+    navPill: document.getElementById("nav-pill"),
+    navPillIndicator: document.getElementById("nav-pill-indicator"),
     hamburger: document.getElementById("hamburger"),
     mobileOverlay: document.getElementById("mobile-overlay"),
     themeToggle: document.getElementById("theme-toggle"),
@@ -167,8 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modal: document.getElementById("project-modal"),
     modalBody: document.getElementById("modal-body"),
     modalClose: document.querySelector(".modal-close"),
-    cursorDot: document.getElementById("cursor-dot"),
-    cursorRing: document.getElementById("cursor-ring"),
+    particleCanvas: document.getElementById("particle-canvas"),
     navLinks: document.querySelectorAll(".nav-link")
   };
 
@@ -262,41 +263,191 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // ==================== CUSTOM CURSOR ====================
-  const CustomCursor = {
-    init() {
-      // Skip on touch devices
-      if (utils.isTouchDevice()) {
-        elements.cursorDot?.remove();
-        elements.cursorRing?.remove();
-        return;
-      }
+  // ==================== INTERACTIVE PARTICLES ====================
+  const InteractiveParticles = {
+    particles: [],
+    mouse: { x: -1000, y: -1000 },
+    animationId: null,
 
+    init() {
+      const canvas = elements.particleCanvas;
+      if (!canvas || utils.isTouchDevice() || utils.prefersReducedMotion()) return;
+
+      this.ctx = canvas.getContext('2d');
+      this.resize();
+      this.createParticles();
       this.bindEvents();
+      this.animate();
+    },
+
+    resize() {
+      const canvas = elements.particleCanvas;
+      const hero = canvas.closest('.hero-section');
+      canvas.width = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    },
+
+    createParticles() {
+      const count = Math.min(80, Math.floor((elements.particleCanvas.width * elements.particleCanvas.height) / 15000));
+      this.particles = [];
+      for (let i = 0; i < count; i++) {
+        this.particles.push({
+          x: Math.random() * elements.particleCanvas.width,
+          y: Math.random() * elements.particleCanvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          radius: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
     },
 
     bindEvents() {
-      document.addEventListener("mousemove", utils.throttle((e) => {
-        if (elements.cursorDot && elements.cursorRing) {
-          elements.cursorDot.style.left = `${e.clientX}px`;
-          elements.cursorDot.style.top = `${e.clientY}px`;
+      window.addEventListener('resize', utils.debounce(() => {
+        this.resize();
+        this.createParticles();
+      }, 200));
 
-          // Smooth follow for ring
-          requestAnimationFrame(() => {
-            elements.cursorRing.style.left = `${e.clientX}px`;
-            elements.cursorRing.style.top = `${e.clientY}px`;
-          });
+      const hero = elements.particleCanvas.closest('.hero-section');
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        this.mouse.x = e.clientX - rect.left;
+        this.mouse.y = e.clientY - rect.top;
+      });
+
+      hero.addEventListener('mouseleave', () => {
+        this.mouse.x = -1000;
+        this.mouse.y = -1000;
+      });
+    },
+
+    animate() {
+      const ctx = this.ctx;
+      const canvas = elements.particleCanvas;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const isDark = state.theme === 'dark';
+      const particleColor = isDark ? '129, 140, 248' : '99, 102, 241';  // primary color
+      const lineColor = isDark ? '129, 140, 248' : '99, 102, 241';
+
+      this.particles.forEach((p, i) => {
+        // Mouse interaction — attract gently
+        const dx = this.mouse.x - p.x;
+        const dy = this.mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 200) {
+          const force = (200 - dist) / 200 * 0.02;
+          p.vx += dx * force;
+          p.vy += dy * force;
         }
-      }, 16));
 
-      // Hover effect on interactive elements
-      const interactiveElements = document.querySelectorAll('a, button, input, textarea, .project-card');
-      interactiveElements.forEach(el => {
-        el.addEventListener("mouseenter", () => {
-          elements.cursorRing?.classList.add("hover");
+        // Dampen velocity
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+
+        // Move particle
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around edges
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${particleColor}, ${p.opacity})`;
+        ctx.fill();
+
+        // Draw connections to nearby particles
+        for (let j = i + 1; j < this.particles.length; j++) {
+          const p2 = this.particles[j];
+          const connDx = p.x - p2.x;
+          const connDy = p.y - p2.y;
+          const connDist = Math.sqrt(connDx * connDx + connDy * connDy);
+
+          if (connDist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(${lineColor}, ${0.15 * (1 - connDist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      });
+
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+  };
+
+  // ==================== FLOATING PILL NAV ====================
+  const FloatingPillNav = {
+    init() {
+      if (window.innerWidth <= 768) return;
+      this.updateIndicator();
+      window.addEventListener('resize', utils.debounce(() => this.updateIndicator(), 100));
+    },
+
+    updateIndicator() {
+      const indicator = elements.navPillIndicator;
+      if (!indicator || window.innerWidth <= 768) return;
+
+      const activeLink = document.querySelector('.nav-link.active');
+      if (!activeLink) {
+        indicator.classList.remove('active');
+        return;
+      }
+
+      const pill = elements.navPill;
+      const pillRect = pill.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+
+      indicator.style.left = `${linkRect.left - pillRect.left}px`;
+      indicator.style.width = `${linkRect.width}px`;
+      indicator.classList.add('active');
+    }
+  };
+
+  // ==================== TILT CARDS ====================
+  const TiltCards = {
+    init() {
+      if (utils.isTouchDevice() || utils.prefersReducedMotion()) return;
+      this.observe();
+    },
+
+    observe() {
+      // Use mutation observer to catch dynamically added cards
+      const observer = new MutationObserver(() => this.bindCards());
+      observer.observe(document.body, { childList: true, subtree: true });
+      this.bindCards();
+    },
+
+    bindCards() {
+      document.querySelectorAll('.project-card, .skill-card').forEach(card => {
+        if (card.dataset.tiltBound) return;
+        card.dataset.tiltBound = 'true';
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
         });
-        el.addEventListener("mouseleave", () => {
-          elements.cursorRing?.classList.remove("hover");
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+          card.style.transition = 'transform 0.5s ease';
+          setTimeout(() => card.style.transition = '', 500);
         });
       });
     }
@@ -336,6 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleMenu() {
       state.isMenuOpen = !state.isMenuOpen;
       elements.hamburger?.classList.toggle("active", state.isMenuOpen);
+      elements.navPill?.classList.toggle("active", state.isMenuOpen);
       elements.navMenu?.classList.toggle("active", state.isMenuOpen);
       elements.mobileOverlay?.classList.toggle("active", state.isMenuOpen);
       elements.hamburger?.setAttribute("aria-expanded", state.isMenuOpen);
@@ -348,6 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (state.isMenuOpen) {
         state.isMenuOpen = false;
         elements.hamburger?.classList.remove("active");
+        elements.navPill?.classList.remove("active");
         elements.navMenu?.classList.remove("active");
         elements.mobileOverlay?.classList.remove("active");
         elements.hamburger?.setAttribute("aria-expanded", "false");
@@ -384,6 +537,9 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
       });
+
+      // Update the pill indicator position
+      FloatingPillNav.updateIndicator();
     },
 
     smoothScroll(e) {
@@ -885,7 +1041,9 @@ document.addEventListener("DOMContentLoaded", () => {
       Modal.init();
       ContactForm.init();
       ScrollAnimations.init();
-      CustomCursor.init();
+      InteractiveParticles.init();
+      FloatingPillNav.init();
+      TiltCards.init();
       ParallaxEffect.init();
       KeyboardNavigation.init();
 

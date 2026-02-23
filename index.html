@@ -46,10 +46,6 @@
   <!-- ==================== SCROLL PROGRESS BAR ==================== -->
   <div class="scroll-progress" id="scroll-progress"></div>
 
-  <!-- ==================== CUSTOM CURSOR (Desktop Only) ==================== -->
-  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
-
   <!-- ==================== NAVIGATION ==================== -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="nav-container">
@@ -57,13 +53,17 @@
         <span class="logo-text">WJH</span><span class="dot">.</span>
       </a>
 
-      <ul class="nav-menu" id="nav-menu" role="menubar">
-        <li role="none"><a href="#about" class="nav-link" role="menuitem">About</a></li>
-        <li role="none"><a href="#skills" class="nav-link" role="menuitem">Skills</a></li>
-        <li role="none"><a href="#experience" class="nav-link" role="menuitem">Journey</a></li>
-        <li role="none"><a href="#projects" class="nav-link" role="menuitem">Projects</a></li>
-        <li role="none"><a href="#contact" class="nav-link" role="menuitem">Contact</a></li>
-      </ul>
+      <!-- Floating Pill Nav -->
+      <div class="nav-pill" id="nav-pill">
+        <div class="nav-pill-indicator" id="nav-pill-indicator"></div>
+        <ul class="nav-menu" id="nav-menu" role="menubar">
+          <li role="none"><a href="#about" class="nav-link" role="menuitem" data-text="About">About</a></li>
+          <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-text="Skills">Skills</a></li>
+          <li role="none"><a href="#experience" class="nav-link" role="menuitem" data-text="Journey">Journey</a></li>
+          <li role="none"><a href="#projects" class="nav-link" role="menuitem" data-text="Projects">Projects</a></li>
+          <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-text="Contact">Contact</a></li>
+        </ul>
+      </div>
 
       <div class="nav-actions">
         <!-- Theme Toggle -->
@@ -101,6 +101,8 @@
   <main id="main-content">
     <!-- ==================== HERO SECTION ==================== -->
     <section id="hero" class="hero-section">
+      <!-- Interactive Particle Background -->
+      <canvas id="particle-canvas" class="particle-canvas"></canvas>
       <!-- Animated Background -->
       <div class="hero-bg">
         <div class="gradient-orb orb-1"></div>
