@@ -112,18 +112,46 @@
       </div>
 
       <div class="container hero-content">
-        <p class="hero-greeting reveal-text">
-          <span class="greeting-line"></span>
-          Hi, I'm
-        </p>
-        <h1 class="hero-name gradient-text reveal-text">Wong Jui Hong</h1>
-        <h2 class="hero-title reveal-text">
-          I build <span class="typing-text" id="typing-text"></span><span class="cursor-blink">|</span>
-        </h2>
+        <div class="tech-badge reveal-text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="tech-icon">
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+          <span class="tech-badge-text">SYSTEM.BOOT_SEQUENCE_OK</span>
+        </div>
+
+        <h1 class="hero-name glitch reveal-text" data-text="Wong Jui Hong">Wong Jui Hong</h1>
+
+        <div class="terminal-window reveal-text">
+          <div class="terminal-header">
+            <div class="terminal-buttons">
+              <span class="term-btn term-close"></span>
+              <span class="term-btn term-min"></span>
+              <span class="term-btn term-max"></span>
+            </div>
+            <div class="terminal-title">guest@neural-net:~</div>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-line line-1">
+              <span class="term-user">guest@neural-net</span><span class="term-colon">:</span><span
+                class="term-dir">~</span><span class="term-prompt">$</span> <span
+                class="term-command">./initialize_skills.sh</span>
+            </div>
+            <div class="terminal-line line-2">
+              <span class="term-output">Loading AI & IT modules... <span class="term-success">[SUCCESS]</span></span>
+            </div>
+            <div class="terminal-line typing-line">
+              <span class="term-user">guest@neural-net</span><span class="term-colon">:</span><span
+                class="term-dir">~</span><span class="term-prompt">$</span>
+              <span class="typing-text" id="typing-text"></span><span class="cursor-blink">&block;</span>
+            </div>
+          </div>
+        </div>
+
         <p class="hero-description reveal-text">
-          A <strong>First Class Honours</strong> Software Engineer transforming complex problems into elegant,
-          reliable solutions. Specializing in <span class="highlight">Full-Stack Web</span> and
-          <span class="highlight">Mobile Development</span>.
+          A <strong class="glow-text">First Class Honours</strong> IT Student transforming complex logic into elegant,
+          intelligent solutions. Specializing in <span class="highlight">Full-Stack Web</span>,
+          <span class="highlight">Mobile Development</span> and crafting tech that makes people say WOW.
         </p>
         <div class="hero-btns reveal-text">
           <a href="#projects" class="btn btn-primary btn-glow">
@@ -172,13 +200,13 @@
     <!-- ==================== ABOUT SECTION ==================== -->
     <section id="about" class="section">
       <div class="container">
-        <h2 class="section-title">
+        <h2 class="section-title reveal-scale">
           <span class="title-number">01.</span>
           About Me
         </h2>
 
         <div class="about-grid">
-          <div class="about-text scroll-reveal">
+          <div class="about-text reveal-left">
             <p>
               Hello! I'm <strong>Wong Jui Hong</strong>, a passionate software engineer based in Malaysia.
               I graduated with <span class="highlight">First Class Honours</span> in Software Engineering from
@@ -205,7 +233,7 @@
             </ul>
           </div>
 
-          <div class="about-visual scroll-reveal">
+          <div class="about-visual reveal-right">
             <div class="about-image-wrapper">
               <div class="about-image-frame"></div>
               <div class="about-image-content">
@@ -217,15 +245,15 @@
 
             <!-- Stats Cards -->
             <div class="stats-grid">
-              <div class="stat-card" data-count="3.9">
+              <div class="stat-card reveal-scale delay-1" data-count="3.9">
                 <h3 class="stat-number">3.9+</h3>
                 <p class="stat-label">CGPA</p>
               </div>
-              <div class="stat-card" data-count="5">
+              <div class="stat-card reveal-scale delay-2" data-count="5">
                 <h3 class="stat-number">5+</h3>
                 <p class="stat-label">Projects</p>
               </div>
-              <div class="stat-card" data-count="1">
+              <div class="stat-card reveal-scale delay-3" data-count="1">
                 <h3 class="stat-number">1st</h3>
                 <p class="stat-label">Class Honours</p>
               </div>
@@ -238,7 +266,7 @@
     <!-- ==================== SKILLS SECTION ==================== -->
     <section id="skills" class="section">
       <div class="container">
-        <h2 class="section-title">
+        <h2 class="section-title reveal-scale">
           <span class="title-number">02.</span>
           Technical Arsenal
         </h2>
@@ -252,7 +280,7 @@
     <!-- ==================== EXPERIENCE SECTION ==================== -->
     <section id="experience" class="section">
       <div class="container">
-        <h2 class="section-title">
+        <h2 class="section-title reveal-scale">
           <span class="title-number">03.</span>
           My Journey
         </h2>
@@ -266,13 +294,13 @@
     <!-- ==================== PROJECTS SECTION ==================== -->
     <section id="projects" class="section">
       <div class="container">
-        <h2 class="section-title">
+        <h2 class="section-title reveal-scale">
           <span class="title-number">04.</span>
           Featured Projects
         </h2>
 
         <!-- Filter Buttons -->
-        <div class="filter-container" role="tablist" aria-label="Filter projects">
+        <div class="filter-container reveal-scale delay-1" role="tablist" aria-label="Filter projects">
           <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All Projects</button>
           <button class="filter-btn" data-filter="mobile" role="tab" aria-selected="false">Mobile</button>
           <button class="filter-btn" data-filter="fullstack" role="tab" aria-selected="false">Full Stack</button>
@@ -283,7 +311,7 @@
           <!-- Projects will be injected by JavaScript -->
         </div>
 
-        <div class="projects-cta scroll-reveal">
+        <div class="projects-cta reveal-scale">
           <p>Interested in more projects?</p>
           <a href="https://github.com/Thisishong03" target="_blank" class="btn btn-outline">
             View GitHub Profile
@@ -298,13 +326,13 @@
     <!-- ==================== CONTACT SECTION ==================== -->
     <section id="contact" class="section">
       <div class="container">
-        <h2 class="section-title">
+        <h2 class="section-title reveal-scale">
           <span class="title-number">05.</span>
           Get In Touch
         </h2>
 
         <div class="contact-wrapper">
-          <div class="contact-info scroll-reveal">
+          <div class="contact-info reveal-left">
             <h3 class="contact-heading">Let's Connect!</h3>
             <p class="contact-text">
               I'm currently looking for new opportunities. Whether you have a question,

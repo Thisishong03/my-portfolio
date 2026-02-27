@@ -133,10 +133,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ],
 
     typingPhrases: [
-      "elegant web experiences.",
-      "cross-platform mobile apps.",
-      "scalable backend systems.",
-      "user-focused solutions."
+      "run intelligent_web_apps.exe",
+      "compile cross_platform.apk",
+      "deploy scalable_backends.sh",
+      "connect smart_tech_integrations.js"
     ]
   };
 
@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const elements = {
     loader: document.getElementById("loader"),
     navbar: document.getElementById("navbar"),
+    navLogo: document.querySelector(".nav-logo"),
     navMenu: document.getElementById("nav-menu"),
     navPill: document.getElementById("nav-pill"),
     navPillIndicator: document.getElementById("nav-pill-indicator"),
@@ -376,6 +377,25 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.strokeStyle = `rgba(${lineColor}, ${0.15 * (1 - connDist / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
+
+            // AI Element: Data flow packets
+            const time = Date.now() * 0.001;
+            const flowSpeed = 0.5;
+            const offset = (i + j) * 0.1;
+            const pulsePos = (time * flowSpeed + offset) % 1;
+
+            if (connDist < 80) {
+              const pulseX = p.x - connDx * pulsePos;
+              const pulseY = p.y - connDy * pulsePos;
+
+              ctx.beginPath();
+              ctx.arc(pulseX, pulseY, 1.5, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(34, 211, 238, ${0.8 * (1 - connDist / 80)})`;
+              ctx.shadowBlur = 8;
+              ctx.shadowColor = 'rgba(34, 211, 238, 1)';
+              ctx.fill();
+              ctx.shadowBlur = 0;
+            }
           }
         }
       });
@@ -481,6 +501,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // Smooth scroll for nav links
       elements.navLinks.forEach(link => {
         link.addEventListener("click", (e) => this.smoothScroll(e));
+      });
+
+      // Smooth scroll to top for logo
+      elements.navLogo?.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: utils.prefersReducedMotion() ? "auto" : "smooth"
+        });
       });
     },
 
@@ -656,8 +685,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     render() {
-      elements.skillsContainer.innerHTML = DATA.skills.map(skill => `
-        <div class="skill-card scroll-reveal">
+      elements.skillsContainer.innerHTML = DATA.skills.map((skill, index) => `
+        <div class="skill-card reveal-scale" style="transition-delay: ${(index % 4) * 100}ms">
           <div class="skill-icon">${skill.icon}</div>
           <h3>${skill.category}</h3>
           <div class="skill-tags">
@@ -714,7 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     render() {
       elements.timelineContainer.innerHTML = DATA.experience.map((item, index) => `
-        <div class="timeline-item scroll-reveal" style="transition-delay: ${index * 100}ms">
+        <div class="timeline-item reveal-scale" style="transition-delay: ${(index % 4) * 100}ms">
           <span class="timeline-date">${item.date}</span>
           <div class="timeline-content">
             <h3>${item.role}</h3>
@@ -743,8 +772,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ? DATA.projects
         : DATA.projects.filter(p => p.category === filter);
 
-      elements.projectsGrid.innerHTML = filteredProjects.map(project => `
-        <div class="project-card scroll-reveal" data-id="${project.id}">
+      elements.projectsGrid.innerHTML = filteredProjects.map((project, index) => `
+        <div class="project-card reveal-scale" data-id="${project.id}" style="transition-delay: ${(index % 3) * 150}ms">
           <div class="project-header">
             <div class="project-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -954,9 +983,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     observe() {
+      const selectors = ".scroll-reveal, .reveal-left, .reveal-right, .reveal-scale";
+
       // Skip animations if user prefers reduced motion
       if (utils.prefersReducedMotion()) {
-        document.querySelectorAll(".scroll-reveal").forEach(el => {
+        document.querySelectorAll(selectors).forEach(el => {
           el.classList.add("visible");
         });
         return;
@@ -975,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rootMargin: "0px 0px -50px 0px"
       });
 
-      document.querySelectorAll(".scroll-reveal").forEach(el => {
+      document.querySelectorAll(selectors).forEach(el => {
         observer.observe(el);
       });
     }
@@ -1021,6 +1052,72 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // ==================== HERO SCROLL PARALLAX (PLANE WINDOW EFFECT) ====================
+  const HeroParallax = {
+    init() {
+      if (utils.prefersReducedMotion()) return;
+      this.hero = document.getElementById('hero');
+      this.heroContent = document.querySelector('.hero-content');
+      this.heroBg = document.querySelector('.hero-bg');
+      this.particleCanvas = document.getElementById('particle-canvas');
+      this.bindEvents();
+    },
+
+    bindEvents() {
+      // Use requestAnimationFrame for smooth 60fps scrolling
+      let ticking = false;
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            this.updateParallax();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    },
+
+    updateParallax() {
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+
+      // Animate while the hero is still relevant in the scrolling view
+      if (scrollY <= viewportHeight && this.hero) {
+        // Calculate progress (0 to 1) based on scrolling down
+        const progress = Math.min(scrollY / (viewportHeight * 0.8), 1);
+
+        // Easing to make the window formation feel organic and premium
+        const easeForming = 1 - Math.pow(1 - progress, 3);
+
+        // Transform the entire hero into a "plane window" looking outside
+        // Wait, applying transform to the sticky element is okay, but it scales from center.
+        const scale = 1 - (easeForming * 0.12); // Window shrinks slightly to frame the view
+        const borderRadius = easeForming * 150; // Pill-shape rounded corners for the plane window
+        const shadowOpacity = easeForming * 0.8;
+
+        // Apply the "plane window" frame effect to the hero wrapper
+        this.hero.style.transform = `scale(${scale})`;
+        this.hero.style.borderRadius = `0 0 ${borderRadius}px ${borderRadius}px`; // Bottom corners round heavily
+        this.hero.style.filter = `brightness(${1 - easeForming * 0.3})`; // Outside gets slightly darker
+        this.hero.style.boxShadow = `inset 0 0 ${easeForming * 60}px rgba(0,0,0,${shadowOpacity}), 0 30px 60px rgba(0,0,0,0.5)`;
+        this.hero.style.willChange = 'transform, border-radius, filter, box-shadow';
+
+        // Content inside the window moves slightly (Parallax) and fades out
+        if (this.heroContent) {
+          this.heroContent.style.transform = `translateY(${scrollY * 0.4}px)`;
+          this.heroContent.style.opacity = Math.max(0, 1 - progress * 1.5);
+          this.heroContent.style.willChange = 'transform, opacity';
+        }
+
+        if (this.particleCanvas && this.heroBg) {
+          this.particleCanvas.style.transform = `translateY(${scrollY * 0.15}px)`;
+          this.heroBg.style.transform = `translateY(${scrollY * 0.1}px)`;
+        }
+      }
+    }
+  };
+
   // ==================== INITIALIZATION ====================
   const App = {
     init() {
@@ -1045,6 +1142,7 @@ document.addEventListener("DOMContentLoaded", () => {
       FloatingPillNav.init();
       TiltCards.init();
       ParallaxEffect.init();
+      HeroParallax.init();
       KeyboardNavigation.init();
 
       console.log("🚀 Portfolio initialized successfully!");
