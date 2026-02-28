@@ -29,9 +29,12 @@
   --border-color: #e2e8f0;
   --border-light: #f1f5f9;
 
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  /* Glassmorphism - Luxury Light */
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-bg-hover: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  --glass-blur: blur(24px) saturate(180%);
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -76,8 +79,12 @@
   --border-color: #334155;
   --border-light: #1e293b;
 
-  --glass-bg: rgba(15, 23, 42, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Glassmorphism - Luxury Dark */
+  --glass-bg: rgba(15, 23, 42, 0.4);
+  --glass-bg-hover: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-blur: blur(24px) saturate(180%);
 
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
@@ -739,8 +746,7 @@ ol {
 .mobile-menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.7);
   opacity: 0;
   visibility: hidden;
   z-index: 998;
@@ -768,6 +774,7 @@ ol {
 /* Cabin content that slides over the window */
 .hero-section~.section {
   background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-light);
   position: relative;
   z-index: 2;
 }
@@ -783,7 +790,7 @@ ol {
 
 /* Hero Background */
 .hero-bg {
-  position: absolute;
+  position: fixed;
   inset: 0;
   overflow: hidden;
   z-index: -1;
@@ -2303,14 +2310,13 @@ a.contact-value:hover {
     border: none;
     padding: 0;
     background: var(--bg-secondary);
-    transform: translateX(100%);
-    transition: transform var(--transition-base);
+    display: none;
     z-index: 999;
     box-shadow: none;
   }
 
   .nav-pill.active {
-    transform: translateX(0);
+    display: block;
   }
 
   .nav-pill-indicator {
@@ -2322,10 +2328,11 @@ a.contact-value:hover {
     padding: 48px 24px;
     gap: 24px;
     width: 100%;
+    display: none;
   }
 
   .nav-menu.active {
-    transform: translateX(0);
+    display: flex;
   }
 
   .nav-link {
@@ -2458,5 +2465,116 @@ a.contact-value:hover {
 
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ==================== 22. PREMIUM LIQUID GLASS EFFECT (iOS 26 Style) ==================== */
+.skill-card,
+.project-card,
+.stat-card,
+.timeline-content,
+.contact-form,
+.modal-content,
+.nav-pill,
+.filter-btn,
+.social-btn,
+.terminal-window {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow);
+}
+
+.skill-card:hover,
+.project-card:hover,
+.stat-card:hover,
+.timeline-content:hover,
+.social-btn:hover,
+.filter-btn:hover {
+  background: var(--glass-bg-hover) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15), 0 0 20px var(--primary-glow) !important;
+}
+
+/* Premium Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.75), rgba(79, 70, 229, 0.85)) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: var(--glass-shadow);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(79, 70, 229, 0.95)) !important;
+  box-shadow: 0 0 25px var(--primary-glow) !important;
+}
+
+.btn-outline {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--primary) !important;
+}
+
+.btn-outline:hover {
+  background: var(--primary) !important;
+  color: white !important;
+  box-shadow: 0 0 20px var(--primary-glow) !important;
+}
+
+/* Navbar styling */
+.navbar.scrolled {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border) !important;
+}
+
+/* Floating pill nav background override */
+.navbar.scrolled .nav-pill {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Remove harsh dark borders that conflict with glassmorphism */
+[data-theme="dark"] .skill-card,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .timeline-content,
+[data-theme="dark"] .contact-form,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .nav-pill {
+  border: 1px solid var(--glass-border) !important;
+}
+
+/* Fix mobile Safari crash caused by heavy backdrop-filter + transform animation */
+@media (max-width: 768px) {
+  .nav-pill {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bg-secondary) !important;
+    /* Simplify transitions to prevent crash */
+    transition: transform 0.2s ease !important;
+    border: 1px solid var(--border-color) !important;
+  }
+
+  /* Make the menu more simple and avoid complex painting over glassmorphism contents */
+  .mobile-menu-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    transition: opacity 0.2s ease !important;
   }
 }
